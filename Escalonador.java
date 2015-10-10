@@ -12,27 +12,43 @@ import java.util.*;
 public class Escalonador {
 
 	public static void main(String[] args) {
-		int quantum;
+		/* Dados */
 		LinkedList<Processo> listaProcessos = new LinkedList<Processo>();
+		int [] prioridades = new int[10];
+		int quantum;
+
+		/* Ferramenta de leitura */
+		BufferedReader leitor; 
 		
-		// Leitura dos arquivos
+		/* Leitura dos arquivos */
 		try {
-			quantum = Integer.parseInt( new BufferedReader( new FileReader( "processos/quantum.txt" ) ).readLine() );
+			/* Quantum */
+			leitor = new BufferedReader( new FileReader( "processos/quantum.txt" ) );
+			quantum = Integer.parseInt( leitor.readLine() );
+
+			/* Prioridades dos processos */
+			leitor = new BufferedReader( new FileReader( "processos/prioridades.txt" ) );
+			for ( int i = 0; i < 10; i++ )
+				prioridades[i] = Integer.parseInt( leitor.readLine() );
+
+			/* Processos */
 			String nomeArquivo;
 			for ( int i = 1; i <= 10; i++ ) {
 				if ( i == 10 ) nomeArquivo = "10.txt";
 				else nomeArquivo = new String( "0" + i + ".txt" );
-				FileReader processo = new FileReader("processos/" + nomeArquivo );
-				BufferedReader leitura = new BufferedReader(processo);
-				String nomeProcesso = leitura.readLine();
+				
+				// Leitura das informações de um processo
+				leitor = new BufferedReader( new FileReader("processos/" + nomeArquivo ) );
+				
+				// Gravação dos dados
+				String nomeProcesso = leitor.readLine();
 				LinkedList<String> instrucoes = new LinkedList<>();
 				String instrucao;
-				while ( ( instrucao = leitura.readLine() ) != null ) {
+				while ( ( instrucao = leitor.readLine() ) != null )
 					instrucoes.add( instrucao );
-				}
-				System.out.println( nomeArquivo );
-				listaProcessos.add( new Processo( nomeProcesso, instrucoes) );
-				processo.close();
+				
+				// Adição do processo na lista e fechamento do arquivo
+				listaProcessos.add( new Processo( nomeProcesso, prioridades[i-1], instrucoes) );
 			}
 
 			Prioridades.executa( listaProcessos, quantum );
