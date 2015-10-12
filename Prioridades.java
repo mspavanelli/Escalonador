@@ -13,8 +13,8 @@ public class Prioridades {
 	// ALGORITMO DE ESCALONAMENTO POR PRIORIDADES
 	
 	/* Processos */
-	LinkedList<Processo> processosProntos = new LinkedList<Processo>();
-	LinkedList<Processo> processosBloqueados = new LinkedList<Processo>();
+	private static LinkedList<Processo> processosProntos = new LinkedList<Processo>();
+	private static LinkedList<Processo> processosBloqueados = new LinkedList<Processo>();
 
 	/* Dados para estatística */
 	double mediaDeTrocas = 0;
@@ -24,10 +24,8 @@ public class Prioridades {
 		// implementação do algoritmo
 		System.out.println( "Executando..." );
 
-		// Impressão dos Processos (debug)
-		Iterator it = listaProcessos.iterator();
-		while ( it.hasNext() )
-			System.out.println( it.next() );
+		// debug
+		imprimeProcessos( listaProcessos );
 	}
 
 	/* funções auxiliares da execução */
@@ -36,5 +34,13 @@ public class Prioridades {
 		return processosBloqueados.add( processosProntos.remove() );
 	}
 
-	public static void reordena( LinkedList<Processo> processos ) {}
+	public static void reordena( LinkedList<Processo> p ) {
+		Collections.sort( p );
+	}
+
+	public static void imprimeProcessos( LinkedList<Processo> p ) {
+		Iterator it = p.iterator();
+		while( it.hasNext() )
+			System.out.println( it.next() );
+	}
 }
