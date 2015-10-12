@@ -32,8 +32,8 @@ public class Prioridades {
 
 	/* funções auxiliares da execução */
 
-	public static boolean bloqueiaProcesso( LinkedList<Processo> origem, LinkedList<Processo> destino ) {
-		return destino.add( origem.remove() );
+	public static boolean bloqueiaProcesso() {
+		return processosBloqueados.add( processosProntos.remove() );
 	}
 
 	public static void reordena( LinkedList<Processo> processos ) {}
