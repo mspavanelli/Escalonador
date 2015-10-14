@@ -46,11 +46,19 @@ public class Processo implements Comparable<Processo> {
 			creditos--;
 	}
 
+	public LinkedList getInstrucoes() {
+		return instrucoes;
+	}
+
+	public String getInstrucao( int i ) {
+		return instrucoes.get(i);
+	}
+
 	public int compareTo( Processo p ) {
 		return Integer.compare( p.creditos, this.creditos );
 	}
 
-	public String toString() {
-		return nome + " (" + creditos + ")";
+	public String toStrings() {
+		return nome + " (" + creditos + ") " + this;
 	}
 }

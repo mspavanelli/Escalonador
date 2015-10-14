@@ -12,6 +12,7 @@ import java.util.*;
 public class Escalonador {
 
 	public static void main(String[] args) {
+
 		/* Dados */
 		LinkedList<Processo> listaProcessos = new LinkedList<Processo>();
 		int [] prioridades = new int[10];
@@ -51,7 +52,7 @@ public class Escalonador {
 				listaProcessos.add( new Processo( nomeProcesso, prioridades[i-1], instrucoes) );
 			}
 
-			Prioridades.executa( listaProcessos, quantum );
+			Prioridades.carrega( listaProcessos, quantum );
 		}
 		catch( Exception e ) {
 			System.out.println( "ERRO NA LEITURA" );
