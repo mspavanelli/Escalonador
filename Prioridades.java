@@ -24,6 +24,7 @@ public class Prioridades {
 		// implementação do algoritmo
 		System.out.println( "Executando..." );
 
+		reordena(listaProcessos);
 		// debug
 		imprimeProcessos( listaProcessos );
 	}

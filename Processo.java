@@ -44,7 +44,7 @@ public class Processo implements Comparable<Processo> {
 	}
 
 	public int compareTo( Processo p ) {
-		return Integer.compare( this.creditos, p.creditos );
+		return Integer.compare( p.creditos, this.creditos );
 	}
 
 	public String toString() {
