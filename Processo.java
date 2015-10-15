@@ -1,23 +1,15 @@
-
-
 import java.util.LinkedList;
 
 /**
  * Classe Processo
  * 
  * - Inclui todos os dados pertinentes à abstração de um processo
- * Teste
  */
 
 public class Processo implements Comparable<Processo> {
 	
-	public static final int BLOQUEADO = 0;
-	public static final int EXECUTANDO = 1;
-	public static final int PRONTO = 2;
-
 	private String nome;
 	private int prioridade;
-	private int estado;
 	private int creditos;
 	private LinkedList<String> instrucoes = new LinkedList<>();
 
@@ -28,22 +20,8 @@ public class Processo implements Comparable<Processo> {
 		this.instrucoes = instrucoes;
 	}
 
-	public void setEstado( int e ) {
-		if ( e == 0 || e == 1 || e == 2 )
-			estado = e;
-	}
-
-	public int getEstado() {
-		return estado;
-	}
-
-	public int getCreditos() {
-		return creditos;
-	}
-
-	public void debitaCredito() {
-		if ( creditos > 0 )
-			creditos--;
+	public String getNome() {
+		return nome;
 	}
 
 	public LinkedList getInstrucoes() {
@@ -58,7 +36,7 @@ public class Processo implements Comparable<Processo> {
 		return Integer.compare( p.creditos, this.creditos );
 	}
 
-	public String toStrings() {
-		return nome + " (" + creditos + ") " + this;
+	public String toString() {
+		return nome + " (" + creditos + ")";
 	}
 }

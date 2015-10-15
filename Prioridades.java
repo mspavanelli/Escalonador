@@ -11,7 +11,8 @@ import java.util.*;
 public class Prioridades {
 	
 	// ALGORITMO DE ESCALONAMENTO POR PRIORIDADES
-	
+
+	private static int quantum;	
 	/* Registradores de Uso Geral */
 	private int registradorX, registradorY;
 
@@ -26,14 +27,17 @@ public class Prioridades {
 	double mediaDeTrocas = 0;
 	double mediaDeInstrucoes = 0;
 
-	public static void carrega( LinkedList<Processo> listaProcessos, int quantum ) {
-		// implementação do algoritmo
+	public static void carrega( LinkedList<Processo> listaProcessos, int q ) {
 		tabelaProcesso = listaProcessos;
-		System.out.println( "Executando..." );
+		quantum = q;
 
-		reordena(listaProcessos);
-		// debug
-		imprimeProcessos( listaProcessos );
+		executa();
+	}
+
+	public static void executa() {
+		// implementação do algoritmo
+		System.out.println( "Executando..." );
+		System.out.printf( "Quantum(%d)\n", quantum );
 	}
 
 	/* funções auxiliares da execução */
