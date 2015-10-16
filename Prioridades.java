@@ -27,54 +27,67 @@ public class Prioridades {
 	double mediaDeTrocas = 0;
 	double mediaDeInstrucoes = 0;
 
-	public static void carrega( LinkedList<Processo> listaProcessos, int q ) {
+	public static void carrega( LinkedList<Processo> listaProcessos, int q ) throws IOException {
 		quantum = q;
 		tabelaProcesso = carregaBCP(listaProcessos);
 		ordena(tabelaProcesso);
 		executa(tabelaProcesso);
 	}
 	
-	public static void executa(LinkedList<BCP> tabelaProcesso) {
+	public static void executa(LinkedList<BCP> tabelaProcesso) throws IOException { //???
 		Iterator<BCP> it = tabelaProcesso.iterator();
+		String nomeLog = new String("log0"+quantum+".txt");
+		FileWriter arq = new FileWriter(nomeLog);
+		PrintWriter gravaArq = new PrintWriter(arq);
+		
+		imprimeTabela(tabelaProcesso, gravaArq);
+		
 		while( it.hasNext()){
-			if(processosProntos.getFirst() != null && processosProntos.getFirst().getCreditos() != 0 )
-				executaProcesso(processosProntos.getFirst()); 
-			else if (processosProntos.getFirst() == null)
+			/*System.out.println("XX");
+			if(processosProntos.getFirst() != null && processosProntos.getFirst().getCreditos() != 0 ){
+				System.out.println("KK");*/
+				executaProcesso(processosProntos.getFirst(), gravaArq); 
+			/*}
+			else if (processosProntos.getFirst() == null){
+				System.out.println("LL");
 				reordenaProntos(processosProntos);
-			else if(processosProntos.getFirst() != null && processosProntos.getFirst().getCreditos() == 0){
-				if(processosBloqueados == null)
-					redistribuiCreditos(processosProntos);
-				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() > 0 )
-					executaProcesso(processosProntos.getFirst()); 
-				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() == 0)
-					redistribuiCreditos(tabelaProcesso);
 			}
-				
+			else if(processosProntos.getFirst() != null && processosProntos.getFirst().getCreditos() == 0){
+				if(processosBloqueados == null){
+					System.out.println("MM");
+					redistribuiCreditos(processosProntos);
+				}
+				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() > 0 ){
+					System.out.println("NN");
+					executaProcesso(processosProntos.getFirst()); 
+				}
+				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() == 0){
+					System.out.println("OO");
+					redistribuiCreditos(tabelaProcesso);
+				}
+			}
+			System.out.println("YY");*/
 			//Pensar como continuar rodando se proximo tem menos creditos
 		}
 		//imprimeTabela(tabelaProcesso);
+		arq.close();
 	}
 
-	public static void executaProcesso(BCP processoAtual) {
-		//Não estamos usando estado EXECUTANDO
-		System.out.println(processoAtual);
-		//
+	public static void executaProcesso(BCP processoAtual, PrintWriter arq) {
 		processoAtual.debitaCredito();
 		int cont = 0;
+		arq.println("Executando "+processoAtual);
 		while(cont <quantum){
 			cont++;
-			//
-			System.out.println(processoAtual.getInstrucao(processoAtual.getContador()));
-			//
 			if(processoAtual.getInstrucao(processoAtual.getContador()).contains("=")){
-				if(processoAtual.getInstrucao(processoAtual.getContador()).contains("X")){
-					processoAtual.setResgistrador(3, "X");
-				}
+				if(processoAtual.getInstrucao(processoAtual.getContador()).contains("X"))
+					processoAtual.setResgistrador(Character.getNumericValue(processoAtual.getInstrucao(processoAtual.getContador()).charAt(processoAtual.getInstrucao(processoAtual.getContador()).length()-1)), "X");
 				else
-					processoAtual.setResgistrador(3, "Y");
+					processoAtual.setResgistrador(Character.getNumericValue(processoAtual.getInstrucao(processoAtual.getContador()).charAt(processoAtual.getInstrucao(processoAtual.getContador()).length()-1)), "Y");
 				processoAtual.setContador();
 			}
 			else if(processoAtual.getInstrucao(processoAtual.getContador()).equalsIgnoreCase("E/S")){
+				arq.println("E/S iniciado em "+processoAtual);
 				bloqueiaProcesso(processoAtual);
 				processoAtual.setContador();
 				break;
@@ -83,10 +96,14 @@ public class Prioridades {
 				processoAtual.setContador();
 			}
 			else{
+				arq.println(processoAtual+" terminado. X="+processoAtual.getResgistrador("X")+". Y="+processoAtual.getResgistrador("Y"));
+				processoAtual.setContador();
 				finalizaProcesso(processoAtual);
+				cont=5;
 				break;
 			}
 		}
+		if(cont != 5)arq.println("Interrompendo "+processoAtual+" após "+cont+" instruções");
 		reordenaProntos(processosProntos);
 		processoAtual.setRodada();
 	}
@@ -147,10 +164,11 @@ public class Prioridades {
 			System.out.println( it.next() );
 	}
 	
-	public static void imprimeTabela( LinkedList<BCP> p ) {
+	public static void imprimeTabela( LinkedList<BCP> p, PrintWriter arq ) {
 		Iterator<BCP> it = p.iterator();
 		while( it.hasNext() )
-			System.out.println( it.next() );
+			//System.out.println( it.next() );
+			arq.println("Carregando "+it.next());
 	}
 	
 	public static LinkedList<BCP> carregaBCP( LinkedList<Processo> p ) {
