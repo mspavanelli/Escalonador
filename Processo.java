@@ -23,7 +23,11 @@ public class Processo implements Comparable<Processo> {
 	public String getNome() {
 		return nome;
 	}
-
+	
+	public int getPrioridade() {
+		return prioridade;
+	}
+	
 	public LinkedList getInstrucoes() {
 		return instrucoes;
 	}

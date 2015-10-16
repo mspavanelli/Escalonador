@@ -17,42 +17,142 @@ public class Prioridades {
 	private int registradorX, registradorY;
 
 	/* Processos */
-	private static LinkedList<Processo> processosProntos = new LinkedList<Processo>();
-	private static LinkedList<Processo> processosBloqueados = new LinkedList<Processo>();
+	private static LinkedList<BCP> processosProntos = new LinkedList<BCP>();
+	private static LinkedList<BCP> processosBloqueados = new LinkedList<BCP>();
 
 	/* Tabela de Processos */
-	private static LinkedList<Processo> tabelaProcesso;
+	private static LinkedList<BCP> tabelaProcesso;
 
 	/* Dados para estatística */
 	double mediaDeTrocas = 0;
 	double mediaDeInstrucoes = 0;
 
 	public static void carrega( LinkedList<Processo> listaProcessos, int q ) {
-		tabelaProcesso = listaProcessos;
 		quantum = q;
-
-		executa();
+		tabelaProcesso = carregaBCP(listaProcessos);
+		ordena(tabelaProcesso);
+		executa(tabelaProcesso);
+	}
+	
+	public static void executa(LinkedList<BCP> tabelaProcesso) {
+		Iterator<BCP> it = tabelaProcesso.iterator();
+		while( it.hasNext()){
+			if(processosProntos.getFirst() != null && processosProntos.getFirst().getCreditos() != 0 )
+				executaProcesso(processosProntos.getFirst()); 
+			else if (processosProntos.getFirst() == null)
+				reordenaProntos(processosProntos);
+			else if(processosProntos.getFirst() != null && processosProntos.getFirst().getCreditos() == 0){
+				if(processosBloqueados == null)
+					redistribuiCreditos(processosProntos);
+				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() > 0 )
+					executaProcesso(processosProntos.getFirst()); 
+				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() > 0)
+					redistribuiCreditos(tabelaProcesso);
+			}
+				
+			//Pensar como continuar rodando se proximo tem menos creditos
+		}
+		//imprimeTabela(tabelaProcesso);
 	}
 
-	public static void executa() {
-		// implementação do algoritmo
-		System.out.println( "Executando..." );
-		System.out.printf( "Quantum(%d)\n", quantum );
+	public static void executaProcesso(BCP processoAtual) {
+		//N�o estamos usando estado EXECUTANDO
+		System.out.println(processoAtual);
+		//
+		processoAtual.debitaCredito();
+		int cont = 0;
+		while(cont <quantum){
+			cont++;
+			//
+			System.out.println(processoAtual.getInstrucao(processoAtual.getContador()));
+			//
+			if(processoAtual.getInstrucao(processoAtual.getContador()).contains("=")){
+				if(processoAtual.getInstrucao(processoAtual.getContador()).contains("X")){
+					processoAtual.setResgistrador(3, "X");
+				}
+				else
+					processoAtual.setResgistrador(3, "y");
+				processoAtual.setContador();
+			}
+			else if(processoAtual.getInstrucao(processoAtual.getContador()).equalsIgnoreCase("E/S")){
+				bloqueiaProcesso(processoAtual);
+				processoAtual.setContador();
+				break;
+			}
+			else if(processoAtual.getInstrucao(processoAtual.getContador()).equalsIgnoreCase("COM")){
+				processoAtual.setContador();
+			}
+			else{
+				finalizaProcesso(processoAtual);
+				break;
+			}
+		}
+		reordenaProntos(processosProntos);
+		processoAtual.setRodada();
 	}
 
 	/* funções auxiliares da execução */
 
-	public static boolean bloqueiaProcesso() {
-		return processosBloqueados.add( processosProntos.remove() );
+	public static void bloqueiaProcesso(BCP p) {
+		p.setEstado(0);
+		p.setRodada();
+		processosProntos.remove(p);
+		processosBloqueados.add(p);
+	}
+	
+	public static void finalizaProcesso(BCP p) {
+		tabelaProcesso.remove(p);
+		processosProntos.remove(p);
 	}
 
-	public static void reordena( LinkedList<Processo> p ) {
+	public static void ordena( LinkedList<BCP> p) {
+		Collections.sort( p );
+		Iterator<BCP> it = p.iterator();
+		while( it.hasNext())
+			processosProntos.add(it.next());
+	}
+	
+	public static void reordenaProntos( LinkedList<BCP> p) {
+		Iterator<BCP> it = processosBloqueados.iterator();
+		BCP b;
+		while( it.hasNext()){
+			b = it.next();
+			b.atualizaRodada();
+			if(b.getRodada() == 0){
+				processosBloqueados.remove(b);
+				b.setEstado(2);
+				processosProntos.add(b);
+			}
+		}
+		Collections.sort( p );
+	}
+	
+	public static void redistribuiCreditos(LinkedList<BCP> p) {
+		Iterator<BCP> it = p.iterator();
+		while( it.hasNext()){
+			it.next().setCredito();
+		}
 		Collections.sort( p );
 	}
 
 	public static void imprimeProcessos( LinkedList<Processo> p ) {
-		Iterator it = p.iterator();
+		Iterator<Processo> it = p.iterator();
 		while( it.hasNext() )
 			System.out.println( it.next() );
 	}
+	
+	public static void imprimeTabela( LinkedList<BCP> p ) {
+		Iterator<BCP> it = p.iterator();
+		while( it.hasNext() )
+			System.out.println( it.next() );
+	}
+	
+	public static LinkedList<BCP> carregaBCP( LinkedList<Processo> p ) {
+		LinkedList<BCP> listaBCP = new LinkedList<BCP>();
+		Iterator<Processo> it = p.iterator();
+		while( it.hasNext())
+			listaBCP.add(new BCP(it.next()));
+		return listaBCP;
+	}
+	
 }
