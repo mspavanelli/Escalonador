@@ -46,7 +46,7 @@ public class Prioridades {
 					redistribuiCreditos(processosProntos);
 				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() > 0 )
 					executaProcesso(processosProntos.getFirst()); 
-				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() > 0)
+				else if(processosBloqueados != null && processosBloqueados.getFirst().getCreditos() == 0)
 					redistribuiCreditos(tabelaProcesso);
 			}
 				
@@ -71,7 +71,7 @@ public class Prioridades {
 					processoAtual.setResgistrador(3, "X");
 				}
 				else
-					processoAtual.setResgistrador(3, "y");
+					processoAtual.setResgistrador(3, "Y");
 				processoAtual.setContador();
 			}
 			else if(processoAtual.getInstrucao(processoAtual.getContador()).equalsIgnoreCase("E/S")){
@@ -95,7 +95,6 @@ public class Prioridades {
 
 	public static void bloqueiaProcesso(BCP p) {
 		p.setEstado(0);
-		p.setRodada();
 		processosProntos.remove(p);
 		processosBloqueados.add(p);
 	}
@@ -114,14 +113,21 @@ public class Prioridades {
 	
 	public static void reordenaProntos( LinkedList<BCP> p) {
 		Iterator<BCP> it = processosBloqueados.iterator();
-		BCP b;
-		while( it.hasNext()){
-			b = it.next();
+		BCP b,c;
+		if(it.hasNext()) b = it.next();
+		else b = null;
+		while( b != null){
 			b.atualizaRodada();
-			if(b.getRodada() == 0){
+			if(b.getRodada() == 0){ 
+				if(it.hasNext()) c = it.next();
+				else c = null;
 				processosBloqueados.remove(b);
 				b.setEstado(2);
 				processosProntos.add(b);
+				b = c;
+			}
+			else if (it.hasNext()){
+				b = it.next();
 			}
 		}
 		Collections.sort( p );
