@@ -86,7 +86,7 @@ public class BCP implements Comparable<BCP>{
 	}
 	
 	public String toString() {
-		return nomeProcesso + " (" + creditosRestantes + ") " + estadoProcesso;
+		return nomeProcesso;
 	}
 	
 	public String getInstrucao( int i ) {
@@ -95,6 +95,13 @@ public class BCP implements Comparable<BCP>{
 	
 	public int getContador() {
 		return contadorPrograma;
+	}
+	
+	public int getResgistrador(String c) {
+		if(c.equalsIgnoreCase("X"))
+			return registradorX;
+		else
+			return registradorY;
 	}
 	
 	public int compareTo( BCP p ) {

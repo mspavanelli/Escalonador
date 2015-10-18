@@ -99,11 +99,11 @@ public class Prioridades {
 				arq.println(processoAtual+" terminado. X="+processoAtual.getResgistrador("X")+". Y="+processoAtual.getResgistrador("Y"));
 				processoAtual.setContador();
 				finalizaProcesso(processoAtual);
-				cont=5;
+				cont=-1;
 				break;
 			}
 		}
-		if(cont != 5)arq.println("Interrompendo "+processoAtual+" após "+cont+" instruções");
+		if(cont > 0)arq.println("Interrompendo "+processoAtual+" após "+cont+" instruções");
 		reordenaProntos(processosProntos);
 		processoAtual.setRodada();
 	}
