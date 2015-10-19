@@ -43,7 +43,7 @@ public class Escalonador {
 				
 				// Gravação dos dados
 				String nomeProcesso = leitor.readLine();
-				LinkedList<String> instrucoes = new LinkedList<>();
+				ArrayList<String> instrucoes = new ArrayList<>();
 				String instrucao;
 				while ( ( instrucao = leitor.readLine() ) != null )
 					instrucoes.add( instrucao );

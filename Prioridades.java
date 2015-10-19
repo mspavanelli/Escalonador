@@ -13,10 +13,8 @@ public class Prioridades {
 	// ALGORITMO DE ESCALONAMENTO POR PRIORIDADES
 
 	private static int quantum;	
-	/* Registradores de Uso Geral */
-	private int registradorX, registradorY;
 
-	/* Processos */
+	/* Lista de Processos */
 	private static LinkedList<BCP> processosProntos = new LinkedList<BCP>();
 	private static LinkedList<BCP> processosBloqueados = new LinkedList<BCP>();
 
@@ -42,7 +40,7 @@ public class Prioridades {
 		
 		imprimeTabela(tabelaProcesso, gravaArq);
 		
-		while( it.hasNext()){
+		while( it.hasNext() ){
 			/*System.out.println("XX");
 			if(processosProntos.getFirst() != null && processosProntos.getFirst().getCreditos() != 0 ){
 				System.out.println("KK");*/
@@ -76,7 +74,7 @@ public class Prioridades {
 	public static void executaProcesso(BCP processoAtual, PrintWriter arq) {
 		processoAtual.debitaCredito();
 		int cont = 0;
-		arq.println("Executando "+processoAtual);
+		arq.println( "Executando " + processoAtual );
 		while(cont <quantum){
 			cont++;
 			if(processoAtual.getInstrucao(processoAtual.getContador()).contains("=")){
@@ -103,8 +101,8 @@ public class Prioridades {
 				break;
 			}
 		}
-		if(cont > 0)arq.println("Interrompendo "+processoAtual+" após "+cont+" instruções");
-		reordenaProntos(processosProntos);
+		if ( cont > 0 ) arq.println( "Interrompendo "+processoAtual+" apos "+cont+" instrucoes" );
+		reordenaProntos( processosProntos );
 		processoAtual.setRodada();
 	}
 
@@ -121,6 +119,7 @@ public class Prioridades {
 		processosProntos.remove(p);
 	}
 
+	/* Chamado quando a tabela de processos e criada, preenche a lista de prcessos prontos */
 	public static void ordena( LinkedList<BCP> p) {
 		Collections.sort( p );
 		Iterator<BCP> it = p.iterator();
@@ -128,6 +127,7 @@ public class Prioridades {
 			processosProntos.add(it.next());
 	}
 	
+	/* Recebe a lista de processos prontos, pega a lista de bloqueados.  */
 	public static void reordenaProntos( LinkedList<BCP> p) {
 		Iterator<BCP> it = processosBloqueados.iterator();
 		BCP b,c;

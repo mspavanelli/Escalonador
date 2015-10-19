@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * Classe Processo
@@ -11,9 +11,9 @@ public class Processo implements Comparable<Processo> {
 	private String nome;
 	private int prioridade;
 	private int creditos;
-	private LinkedList<String> instrucoes = new LinkedList<>();
+	private ArrayList<String> instrucoes = new ArrayList<String>();
 
-	public Processo( String nome, int prioridade, LinkedList<String> instrucoes ) {
+	public Processo( String nome, int prioridade, ArrayList<String> instrucoes ) {
 		this.nome = nome;
 		this.prioridade = prioridade;
 		this.creditos = prioridade;
@@ -28,7 +28,7 @@ public class Processo implements Comparable<Processo> {
 		return prioridade;
 	}
 	
-	public LinkedList getInstrucoes() {
+	public ArrayList getInstrucoes() {
 		return instrucoes;
 	}
 

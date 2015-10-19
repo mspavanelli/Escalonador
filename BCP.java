@@ -1,10 +1,10 @@
-import java.util.LinkedList;
+import java.util.*;
 
 public class BCP implements Comparable<BCP>{
 	
 	// Possíveis Estados
 	public static final int BLOQUEADO = 0;
-	public static final int EXECUTANDO = 1;
+	public static final int EXECUTANDO = 1;	// talvez seja desnecessário
 	public static final int PRONTO = 2;
 
 	// INFORMAÇÕES DOS PROCESSOS
@@ -16,7 +16,7 @@ public class BCP implements Comparable<BCP>{
 	private int prioridade;
 	private int creditosRestantes;
 	private int rodadaBloq;
-	private LinkedList<String> instrucoes = new LinkedList<>();
+	private ArrayList<String> instrucoes = new ArrayList<>();
 	
 	/* incluir referência ao segmento de texto do programa */
 	// Integer.toHexString(segmento.hashCode());
@@ -30,7 +30,7 @@ public class BCP implements Comparable<BCP>{
 		contadorPrograma = 0;
 		prioridade = p.getPrioridade();
 		creditosRestantes = prioridade;
-		referenciaMem = "@AA";
+		referenciaMem = "@AA";	// verificar
 		instrucoes = p.getInstrucoes();
 		rodadaBloq = 0;
 		
