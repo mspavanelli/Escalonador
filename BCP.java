@@ -53,7 +53,7 @@ public class BCP implements Comparable<BCP>{
 	}
 	
 	public void setRodada() {
-		rodadaBloq = 2;
+		rodadaBloq = 3;
 	}
 	
 	public void atualizaRodada() {
@@ -106,5 +106,11 @@ public class BCP implements Comparable<BCP>{
 	
 	public int compareTo( BCP p ) {
 		return Integer.compare( p.getCreditos(), this.creditosRestantes );
+	}
+	
+	public String info(){
+		return "------> Nome: "+ nomeProcesso +" | Estado: "+ estadoProcesso
+				+ " | Rodada: "+ rodadaBloq+" | Creditos: "+ creditosRestantes
+				+ " | X="+registradorX+" Y="+registradorY+"\n";
 	}
 }

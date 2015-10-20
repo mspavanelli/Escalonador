@@ -34,17 +34,24 @@ public class Prioridades {
 	
 	public static void executa(LinkedList<BCP> tabelaProcesso) throws IOException { //???
 		Iterator<BCP> it = tabelaProcesso.iterator();
+		
 		String nomeLog = new String("log0"+quantum+".txt");
 		FileWriter arq = new FileWriter(nomeLog);
 		PrintWriter gravaArq = new PrintWriter(arq);
 		
-		imprimeTabela(tabelaProcesso, gravaArq);
+		/*Log completo de cada passo*/
+		String nomeLogC = new String("Clog0"+quantum+".txt");
+		FileWriter arqC = new FileWriter(nomeLogC);
+		PrintWriter gravaArqC = new PrintWriter(arqC);
+		//--------------
+		
+		imprimeTabela(tabelaProcesso, gravaArq, gravaArqC);
 		
 		while( it.hasNext() ){
 			/*System.out.println("XX");
 			if(processosProntos.getFirst() != null && processosProntos.getFirst().getCreditos() != 0 ){
 				System.out.println("KK");*/
-				executaProcesso(processosProntos.getFirst(), gravaArq); 
+				executaProcesso(processosProntos.getFirst(), gravaArq, gravaArqC); 
 			/*}
 			else if (processosProntos.getFirst() == null){
 				System.out.println("LL");
@@ -69,49 +76,61 @@ public class Prioridades {
 		}
 		//imprimeTabela(tabelaProcesso);
 		arq.close();
+		arqC.close();
 	}
 
-	public static void executaProcesso(BCP processoAtual, PrintWriter arq) {
+	public static void executaProcesso(BCP processoAtual, PrintWriter arq, PrintWriter arqC) {
+		arqC.print(processoAtual.info());
 		processoAtual.debitaCredito();
 		int cont = 0;
 		arq.println( "Executando " + processoAtual );
+		arqC.println( "Executando " + processoAtual );
 		while(cont <quantum){
 			cont++;
 			if(processoAtual.getInstrucao(processoAtual.getContador()).contains("=")){
 				if(processoAtual.getInstrucao(processoAtual.getContador()).contains("X"))
-					processoAtual.setResgistrador(Character.getNumericValue(processoAtual.getInstrucao(processoAtual.getContador()).charAt(processoAtual.getInstrucao(processoAtual.getContador()).length()-1)), "X");
+					processoAtual.setResgistrador(Integer.parseInt(processoAtual.getInstrucao(processoAtual.getContador()).substring(2)), "X");
 				else
-					processoAtual.setResgistrador(Character.getNumericValue(processoAtual.getInstrucao(processoAtual.getContador()).charAt(processoAtual.getInstrucao(processoAtual.getContador()).length()-1)), "Y");
+					processoAtual.setResgistrador(Integer.parseInt(processoAtual.getInstrucao(processoAtual.getContador()).substring(2)), "Y");
+				arqC.println( "I_ " + processoAtual.getInstrucao(processoAtual.getContador()) );
 				processoAtual.setContador();
 			}
 			else if(processoAtual.getInstrucao(processoAtual.getContador()).equalsIgnoreCase("E/S")){
 				arq.println("E/S iniciado em "+processoAtual);
 				bloqueiaProcesso(processoAtual);
+				arqC.println( "I_ " + processoAtual.getInstrucao(processoAtual.getContador()) );
 				processoAtual.setContador();
 				break;
 			}
 			else if(processoAtual.getInstrucao(processoAtual.getContador()).equalsIgnoreCase("COM")){
+				arqC.println( "I_ " + processoAtual.getInstrucao(processoAtual.getContador()) );
 				processoAtual.setContador();
 			}
 			else{
+				arqC.println( "I_ " + processoAtual.getInstrucao(processoAtual.getContador()) );
 				arq.println(processoAtual+" terminado. X="+processoAtual.getResgistrador("X")+". Y="+processoAtual.getResgistrador("Y"));
+				arqC.println(processoAtual+" terminado. X="+processoAtual.getResgistrador("X")+". Y="+processoAtual.getResgistrador("Y"));
 				processoAtual.setContador();
 				finalizaProcesso(processoAtual);
 				cont=-1;
 				break;
 			}
 		}
-		if ( cont > 0 ) arq.println( "Interrompendo "+processoAtual+" apos "+cont+" instrucoes" );
-		reordenaProntos( processosProntos );
-		processoAtual.setRodada();
+		if ( cont > 0 ) {
+			arq.println( "Interrompendo "+processoAtual+" apos "+cont+" instrucoes" );
+			arqC.println( "Interrompendo "+processoAtual+" apos "+cont+" instrucoes" );
+		}
+		arqC.println(processoAtual.info());
+		reordenaProntos( processosProntos, arqC );
 	}
 
 	/* funções auxiliares da execução */
 
-	public static void bloqueiaProcesso(BCP p) {
+	public static void  bloqueiaProcesso(BCP p) {
 		p.setEstado(0);
-		processosProntos.remove(p);
+		p.setRodada();
 		processosBloqueados.add(p);
+		processosProntos.remove(p);
 	}
 	
 	public static void finalizaProcesso(BCP p) {
@@ -128,12 +147,14 @@ public class Prioridades {
 	}
 	
 	/* Recebe a lista de processos prontos, pega a lista de bloqueados.  */
-	public static void reordenaProntos( LinkedList<BCP> p) {
+	public static void reordenaProntos( LinkedList<BCP> p, PrintWriter arqC) {
 		Iterator<BCP> it = processosBloqueados.iterator();
 		BCP b,c;
 		if(it.hasNext()) b = it.next();
 		else b = null;
 		while( b != null){
+			//arqC.println(b.info());
+			//arqC.println("\nentrou\n");
 			b.atualizaRodada();
 			if(b.getRodada() == 0){ 
 				if(it.hasNext()) c = it.next();
@@ -148,6 +169,11 @@ public class Prioridades {
 			}
 		}
 		Collections.sort( p );
+		arqC.println("\nProntos:");
+		imprimeProcessos(p, arqC);
+		arqC.println("\nBloqueados:");
+		imprimeProcessos(processosBloqueados, arqC);
+		arqC.print("\n");
 	}
 	
 	public static void redistribuiCreditos(LinkedList<BCP> p) {
@@ -158,17 +184,25 @@ public class Prioridades {
 		Collections.sort( p );
 	}
 
-	public static void imprimeProcessos( LinkedList<Processo> p ) {
-		Iterator<Processo> it = p.iterator();
-		while( it.hasNext() )
-			System.out.println( it.next() );
+	public static void imprimeProcessos( LinkedList<BCP> p, PrintWriter arqC ) {
+		Iterator<BCP> it = p.iterator();
+		BCP b;
+		int i =0;
+		while( it.hasNext() ){
+			i++;
+			b = it.next();
+			arqC.print(i+". "+b.info());
+		}
 	}
 	
-	public static void imprimeTabela( LinkedList<BCP> p, PrintWriter arq ) {
+	public static void imprimeTabela( LinkedList<BCP> p, PrintWriter arq, PrintWriter arqC ) {
 		Iterator<BCP> it = p.iterator();
-		while( it.hasNext() )
-			//System.out.println( it.next() );
-			arq.println("Carregando "+it.next());
+		BCP b;
+		while( it.hasNext() ){
+			b = it.next();
+			arq.println("Carregando "+ b);
+			arqC.println("Carregando "+ b);
+		}
 	}
 	
 	public static LinkedList<BCP> carregaBCP( LinkedList<Processo> p ) {

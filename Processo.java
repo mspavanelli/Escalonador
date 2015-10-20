@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * - Inclui todos os dados pertinentes à abstração de um processo
  */
 
-public class Processo implements Comparable<Processo> {
+public class Processo {
 	
 	private String nome;
 	private int prioridade;
@@ -28,19 +28,11 @@ public class Processo implements Comparable<Processo> {
 		return prioridade;
 	}
 	
-	public ArrayList getInstrucoes() {
+	public ArrayList<String> getInstrucoes() {
 		return instrucoes;
 	}
 
 	public String getInstrucao( int i ) {
 		return instrucoes.get(i);
-	}
-
-	public int compareTo( Processo p ) {
-		return Integer.compare( p.creditos, this.creditos );
-	}
-
-	public String toString() {
-		return nome + " (" + creditos + ")";
 	}
 }
