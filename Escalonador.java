@@ -55,7 +55,7 @@ public class Escalonador {
 			Prioridades.carrega( listaProcessos, quantum );
 		}
 		catch( Exception e ) {
-			System.out.println( "ERRO NA LEITURA" );
+			System.out.println( "ERRO NA LEITURA \n" +e);
 		}
 	}	
 }

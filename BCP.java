@@ -22,6 +22,7 @@ public class BCP implements Comparable<BCP>{
 	// Integer.toHexString(segmento.hashCode());
 
 	/* Carrega as informações do processo */
+	public BCP (){}
 	public BCP ( Processo p ) {
 		nomeProcesso = p.getNome();
 		estadoProcesso = 2;
