@@ -1,8 +1,12 @@
 import java.util.*;
+/**
+* Classe BCP
+* Carrega as informacoes do processo 
+*/
 
 public class BCP implements Comparable<BCP>{
 
-	// INFORMACOES DOS PROCESSOS
+	
 	private String nomeProcesso;
 	private String referenciaMem;
 	private int estadoProcesso;
@@ -13,7 +17,7 @@ public class BCP implements Comparable<BCP>{
 	private int rodadaBloq;
 	private ArrayList<String> instrucoes = new ArrayList<>();
 	
-	/* Carrega as informacoes do processo */
+	
 	public BCP (){
 	}
 	
