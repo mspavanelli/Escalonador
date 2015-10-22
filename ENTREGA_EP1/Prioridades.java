@@ -6,8 +6,8 @@ import java.util.*;
 /**
  * Classe Prioridade
  * 
- * Esta classe é responsável pela implementação do algoritmo de escalonamento propriamente dito.
- * Ela guarda todos os processos e os gerencia conforme as suas instruções.
+ * Esta classe e responsavel pela implementacao do algoritmo de escalonamento propriamente dito.
+ * Ela guarda todos os processos e os gerencia conforme as suas instrucoes.
  */
 
 public class Prioridades {
@@ -23,7 +23,7 @@ public class Prioridades {
 	/* Tabela de Processos */
 	private static LinkedList<BCP> tabelaProcesso;
 
-	/* Dados para estatística */
+	/* Dados para estatistica */
 	static int nTrocas = 0;
 	static int nInstrucoes = 0;
 	static int nProcessos = 0;
@@ -36,7 +36,7 @@ public class Prioridades {
 		executa();
 	}
 	
-	public static void executa() throws IOException { //???
+	public static void executa() throws IOException { 
 		String nomeLog;
 		if(quantum < 10) nomeLog = new String("log0"+quantum+".txt");
 		else nomeLog = new String("log"+quantum+".txt");
@@ -110,7 +110,7 @@ public class Prioridades {
 		reordenaProntos();
 	}
 
-	/* funções auxiliares da execução */
+	/* funcoes auxiliares da execucao */
 
 	public static void  bloqueiaProcesso(BCP p) {
 		p.setEstado(0);
@@ -136,7 +136,7 @@ public class Prioridades {
 		}
 	}
 	
-	/* Recebe a lista de processos prontos, pega a lista de bloqueados.  */
+	/* Remove o processo da lista de bloqueados e inclui na lista de prontos.  */
 	public static void reordenaProntos() {
 		Iterator<BCP> it = processosBloqueados.iterator();
 		while( it.hasNext()){
