@@ -12,8 +12,6 @@ import java.util.*;
 
 public class Prioridades {
 	
-	// ALGORITMO DE ESCALONAMENTO POR PRIORIDADES
-
 	private static int quantum;	
 
 	/* Lista de Processos */
@@ -36,6 +34,7 @@ public class Prioridades {
 		executa();
 	}
 	
+	/*Verifica, dentro da tabela de processos,se existem processos e se seus créditos estão maior que 0.  */
 	public static void executa() throws IOException { 
 		String nomeLog;
 		if(quantum < 10) nomeLog = new String("log0"+quantum+".txt");
