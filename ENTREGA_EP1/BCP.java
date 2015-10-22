@@ -2,7 +2,7 @@ import java.util.*;
 
 public class BCP implements Comparable<BCP>{
 
-	// INFORMAÇÕES DOS PROCESSOS
+	// INFORMACOES DOS PROCESSOS
 	private String nomeProcesso;
 	private String referenciaMem;
 	private int estadoProcesso;
@@ -13,7 +13,7 @@ public class BCP implements Comparable<BCP>{
 	private int rodadaBloq;
 	private ArrayList<String> instrucoes = new ArrayList<>();
 	
-	/* Carrega as informações do processo */
+	/* Carrega as informacoes do processo */
 	public BCP (){
 	}
 	
@@ -25,7 +25,7 @@ public class BCP implements Comparable<BCP>{
 		contadorPrograma = 0;
 		prioridade = p.getPrioridade();
 		creditosRestantes = prioridade;
-		referenciaMem = Integer.toHexString(this.hashCode());	// verificar
+		referenciaMem = Integer.toHexString(this.hashCode());	
 		instrucoes = p.getInstrucoes();
 		rodadaBloq = 0;
 		
