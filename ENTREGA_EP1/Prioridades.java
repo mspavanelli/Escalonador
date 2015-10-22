@@ -44,20 +44,14 @@ public class Prioridades {
 		FileWriter arq = new FileWriter(nomeLog);
 		PrintWriter gravaArq = new PrintWriter(arq);
 		
-		/*Log completo de cada passo*/
-		String nomeLogC = new String("Clog"+quantum+".txt");
-		FileWriter arqC = new FileWriter(nomeLogC);
-		PrintWriter gravaArqC = new PrintWriter(arqC);
-		//--------------
-		
-		imprimeTabela(tabelaProcesso, gravaArq, gravaArqC);
+		imprimeTabela(tabelaProcesso, gravaArq);
 		
 		Iterator<BCP> it = tabelaProcesso.iterator();
 		while( it.hasNext() ){
 			if(!processosProntos.isEmpty()){
 				if(processosProntos.getFirst().getCreditos() > 0){
 					nTrocas++;
-					executaProcesso(processosProntos.getFirst(), gravaArq, gravaArqC); 
+					executaProcesso(processosProntos.getFirst(), gravaArq); 
 				}
 				else if(processosProntos.getFirst().getCreditos() == 0){
 					if(processosBloqueados.isEmpty() || processosBloqueados.getFirst().getCreditos() == 0){
@@ -65,24 +59,20 @@ public class Prioridades {
 					}
 					else if(processosBloqueados.getFirst().getCreditos() > 0){
 						nTrocas++;
-						executaProcesso(processosProntos.getFirst(), gravaArq, gravaArqC);
+						executaProcesso(processosProntos.getFirst(), gravaArq);
 					}
 				}
 			}
-			else reordenaProntos(gravaArqC);
+			else reordenaProntos();
 		}
-		gravaArqC.println(estatisticas());
 		gravaArq.println(estatisticas());
 		arq.close();
-		arqC.close();
 	}
 
-	public static void executaProcesso(BCP processoAtual, PrintWriter arq, PrintWriter arqC) {
-		arqC.print(processoAtual.info());
+	public static void executaProcesso(BCP processoAtual, PrintWriter arq) {
 		processoAtual.debitaCredito();
 		int cont = 0;
 		arq.println( "Executando " + processoAtual );
-		arqC.println( "Executando " + processoAtual );
 		while(cont <quantum){
 			cont++;
 			if(processoAtual.getInstrucao(processoAtual.getContador()).contains("=")){
@@ -90,28 +80,22 @@ public class Prioridades {
 					processoAtual.setResgistrador(Integer.parseInt(processoAtual.getInstrucao(processoAtual.getContador()).substring(2)), "X");
 				else
 					processoAtual.setResgistrador(Integer.parseInt(processoAtual.getInstrucao(processoAtual.getContador()).substring(2)), "Y");
-				arqC.println( "I_ " + processoAtual.getInstrucao(processoAtual.getContador()) );
 				nInstrucoes++;
 				processoAtual.setContador();
 			}
 			else if(processoAtual.getInstrucao(processoAtual.getContador()).equalsIgnoreCase("E/S")){
 				arq.println("E/S iniciado em "+processoAtual);
-				arqC.println("E/S iniciado em "+processoAtual);
 				nInstrucoes++;
 				bloqueiaProcesso(processoAtual);
-				arqC.println( "I_ " + processoAtual.getInstrucao(processoAtual.getContador()) );
 				processoAtual.setContador();
 				break;
 			}
 			else if(processoAtual.getInstrucao(processoAtual.getContador()).equalsIgnoreCase("COM")){
-				arqC.println( "I_ " + processoAtual.getInstrucao(processoAtual.getContador()) );
 				nInstrucoes++;
 				processoAtual.setContador();
 			}
 			else{
-				arqC.println( "I_ " + processoAtual.getInstrucao(processoAtual.getContador()) );
 				arq.println(processoAtual+" terminado. X="+processoAtual.getResgistrador("X")+". Y="+processoAtual.getResgistrador("Y"));
-				arqC.println(processoAtual+" terminado. X="+processoAtual.getResgistrador("X")+". Y="+processoAtual.getResgistrador("Y"));
 				nInstrucoes++;
 				processoAtual.setContador();
 				finalizaProcesso(processoAtual);
@@ -122,10 +106,8 @@ public class Prioridades {
 		if ( cont > 0 ) {
 			if(cont == 1)arq.println( "Interrompendo "+processoAtual+" apos "+cont+" instrucao" );
 			else arq.println( "Interrompendo "+processoAtual+" apos "+cont+" instrucoes" );
-			arqC.println( "Interrompendo "+processoAtual+" apos "+cont+" instrucoes" );
 		}
-		arqC.println(processoAtual.info());
-		reordenaProntos(arqC);
+		reordenaProntos();
 	}
 
 	/* funções auxiliares da execução */
@@ -155,7 +137,7 @@ public class Prioridades {
 	}
 	
 	/* Recebe a lista de processos prontos, pega a lista de bloqueados.  */
-	public static void reordenaProntos(PrintWriter arqC) {
+	public static void reordenaProntos() {
 		Iterator<BCP> it = processosBloqueados.iterator();
 		while( it.hasNext()){
 			BCP b = new BCP();
@@ -169,11 +151,6 @@ public class Prioridades {
 			}
 		}
 		Collections.sort( processosProntos );
-		arqC.println("\nProntos:");
-		imprimeProcessos(processosProntos, arqC);
-		arqC.println("\nBloqueados:");
-		imprimeProcessos(processosBloqueados, arqC);
-		arqC.print("\n");
 	}
 	
 	public static void redistribuiCreditos() {
@@ -185,26 +162,13 @@ public class Prioridades {
 		}
 		Collections.sort( processosProntos );
 	}
-
-	public static void imprimeProcessos( LinkedList<BCP> p, PrintWriter arqC ) {
-		Iterator<BCP> it = p.iterator();
-		BCP b;
-		int i =0;
-		while( it.hasNext() ){
-			i++;
-			b = it.next();
-			//System.out.println(b.info());
-			arqC.print(i+". "+b.info());
-		}
-	}
 	
-	public static void imprimeTabela( LinkedList<BCP> p, PrintWriter arq, PrintWriter arqC ) {
+	public static void imprimeTabela( LinkedList<BCP> p, PrintWriter arq ) {
 		Iterator<BCP> it = p.iterator();
 		BCP b;
 		while( it.hasNext() ){
 			b = it.next();
 			arq.println("Carregando "+ b);
-			arqC.println("Carregando "+ b);
 		}
 	}
 	

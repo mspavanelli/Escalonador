@@ -1,11 +1,6 @@
 import java.util.*;
 
 public class BCP implements Comparable<BCP>{
-	
-	// Possíveis Estados
-	public static final int BLOQUEADO = 0;
-	public static final int EXECUTANDO = 1;	// talvez seja desnecessário
-	public static final int PRONTO = 2;
 
 	// INFORMAÇÕES DOS PROCESSOS
 	private String nomeProcesso;
@@ -37,7 +32,7 @@ public class BCP implements Comparable<BCP>{
 	}
 
 	public void setEstado( int e ) {
-		if ( e == 0 || e == 1 || e == 2 )
+		if ( e == 0  || e == 2 )
 			estadoProcesso = e;
 	}
 
@@ -107,10 +102,5 @@ public class BCP implements Comparable<BCP>{
 	public int compareTo( BCP p ) {
 		return Integer.compare( p.getCreditos(), this.creditosRestantes );
 	}
-	
-	public String info(){
-		return "------> Nome: "+ nomeProcesso +" | Estado: "+ estadoProcesso
-				+ " | Rodada: "+ rodadaBloq+" | Mem: "+ referenciaMem+" | Creditos: "+ creditosRestantes
-				+ " | X="+registradorX+" Y="+registradorY+"\n";
-	}
+
 }
