@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * Classe Processo
  * 
- * - Inclui todos os dados pertinentes à abstração de um processo
+ * - Inclui todos os dados pertinentes a abstracao de um processo
  */
 
 public class Processo {
