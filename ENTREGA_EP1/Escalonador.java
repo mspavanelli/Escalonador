@@ -6,7 +6,6 @@ import java.util.*;
  * 
  * - Leitura dos arquivos
  * 		- lista dos processos -> envio de dados ao escalonador
- * - Geração do LogFile
  */
 
 public class Escalonador {
@@ -38,17 +37,17 @@ public class Escalonador {
 				if ( i == 10 ) nomeArquivo = "10.txt";
 				else nomeArquivo = new String( "0" + i + ".txt" );
 				
-				// Leitura das informações de um processo
+				// Leitura das informacoes de um processo
 				leitor = new BufferedReader( new FileReader("processos/" + nomeArquivo ) );
 				
-				// Gravação dos dados
+				// Gravacao dos dados
 				String nomeProcesso = leitor.readLine();
 				ArrayList<String> instrucoes = new ArrayList<>();
 				String instrucao;
 				while ( ( instrucao = leitor.readLine() ) != null )
 					instrucoes.add( instrucao );
 				
-				// Adição do processo na lista e fechamento do arquivo
+				// Adicao do processo na lista e fechamento do arquivo
 				listaProcessos.add( new Processo( nomeProcesso, prioridades[i-1], instrucoes) );
 			}
 

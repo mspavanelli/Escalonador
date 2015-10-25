@@ -1,13 +1,12 @@
 import java.util.*;
+/**
+* Classe BCP
+* Carrega as informacoes do processo 
+*/
 
 public class BCP implements Comparable<BCP>{
-	
-	// Possíveis Estados
-	public static final int BLOQUEADO = 0;
-	public static final int EXECUTANDO = 1;	// talvez seja desnecessário
-	public static final int PRONTO = 2;
 
-	// INFORMAÇÕES DOS PROCESSOS
+	
 	private String nomeProcesso;
 	private String referenciaMem;
 	private int estadoProcesso;
@@ -18,7 +17,7 @@ public class BCP implements Comparable<BCP>{
 	private int rodadaBloq;
 	private ArrayList<String> instrucoes = new ArrayList<>();
 	
-	/* Carrega as informações do processo */
+	
 	public BCP (){
 	}
 	
@@ -30,14 +29,14 @@ public class BCP implements Comparable<BCP>{
 		contadorPrograma = 0;
 		prioridade = p.getPrioridade();
 		creditosRestantes = prioridade;
-		referenciaMem = Integer.toHexString(this.hashCode());	// verificar
+		referenciaMem = Integer.toHexString(this.hashCode());	
 		instrucoes = p.getInstrucoes();
 		rodadaBloq = 0;
 		
 	}
 
 	public void setEstado( int e ) {
-		if ( e == 0 || e == 1 || e == 2 )
+		if ( e == 0  || e == 2 )
 			estadoProcesso = e;
 	}
 
@@ -107,10 +106,5 @@ public class BCP implements Comparable<BCP>{
 	public int compareTo( BCP p ) {
 		return Integer.compare( p.getCreditos(), this.creditosRestantes );
 	}
-	
-	public String info(){
-		return "------> Nome: "+ nomeProcesso +" | Estado: "+ estadoProcesso
-				+ " | Rodada: "+ rodadaBloq+" | Mem: "+ referenciaMem+" | Creditos: "+ creditosRestantes
-				+ " | X="+registradorX+" Y="+registradorY+"\n";
-	}
+
 }
